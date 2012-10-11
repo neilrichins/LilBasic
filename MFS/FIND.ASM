@@ -1,0 +1,58 @@
+;FIND_FILE
+;Find file pointed ontop of AES stack
+; then point to program in memory!
+; Needs:        PNTR_L --> Filename
+;               PNTR_H -^
+;               A      --> Filetype
+;
+; Returns :     DPTR  --> Start of program
+;               C     --> SET = File name not found
+;
+; Uses:         TMP1  --> File Type
+;               TMP2  --> Char in FN pointer/counter
+;               TMP3  --> AES Pointer as is was when entered subroutine.
+;               TMP4  -^
+;               TMP5  --> Current char in AES FN being processed
+
+
+
+
+FIND_FILE:
+        MOV     TMP1,A                  ;Save Filetype
+        MOV     TMP3,PNTR_L             ;Save Pointer
+        MOV     TMP4,PNTR_H             ;Save Pointer
+        CALL    READ_CHAR               ;Clear read char if needed
+        MOV     DPTR,#START_OF_PROGRAMS ;Initilize DATA pointer
+
+FIND_LOOP:
+        CALL    FIND_NEXT_TAG           ;Get next tag in memory
+        JNC     FIND_NO_FILE            ;If end found, then end
+        MOV     A,#0H                   ;Clear A
+        MOVC    A,@A+DPTR               ;Get File type
+        INC     DPTR                    ;Step over tag
+        CJNE    A,TMP1,FIND_LOOP        ;If not the right file type, then try again.
+        MOV     PNTR_L,TMP3             ;Restore Pointer
+        MOV     PNTR_H,TMP4             ;Restore Pointer
+
+FIND_COMP_C:
+
+        CALL    READ_CHAR
+        CALL    UPPER                   ;Convert  to uppercase
+        MOV     TMP5,A                  ;Save Char for later use
+        MOV     A,#0                    ;Clear Out A
+        MOVC    A,@A+DPTR               ;Get character in DPRT string
+        INC     DPTR
+        CALL    UPPER                   ;Convert to uppercase
+        JZ      FOUND_FILE              ;If at the end of FN then exit
+FIND_CONT:
+        CJNE    A,TMP5,FIND_LOOP        ;if chars not equal, Try next tag
+        SJMP    FIND_COMP_C             ;Else check next char
+
+FIND_NO_FILE:                           ;File dosn't exist
+        SETB    C                       ;Flag invalid name
+        RET
+
+FOUND_FILE:                              ;Found File !!!!!
+
+        CLR     C                        ;Flag valid name
+        RET

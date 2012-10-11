@@ -1,0 +1,7 @@
+BREAKSTART:
+        call   tst                      ;Check if 'BREAK' command
+        db      'BREA',('K' OR 80H)
+        jnc     BREAKEND:               ;If not check next command
+        CALL    DONE                    ;Clear pointer
+        JMP     0000H                   ;Reset CPU
+BREAKEND:

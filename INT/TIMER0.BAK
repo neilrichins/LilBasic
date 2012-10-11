@@ -1,0 +1,65 @@
+;===================================================================
+;I          TIMER 0 INTERRUPT VECTOR --> PWM   (009216)/
+;===================================================================
+TIMER_0:
+        PUSH    PSW                     ;Save Flags
+        PUSH    Acc                     ;Save Acc so we can use it
+        MOV     A,PRT_MSK               ;get port mask to toggle all bits
+        DJNZ    TIMER0,TO_CHK           ;Bump counter, if TIMER not 0 then Check to see if time to toggle PWM
+        MOV     TIMER0,#100             ;Reset Timer0 back to 100 (1% to 99% threshold)
+        INC     TIMER1                  ;Else increase timer 1
+        CPL     A                       ;Invert mask
+        ANL     A,P1                    ;And mask with port... to get pins to turn off
+        MOV     P1,A                    ;Update port (reset bits)
+T0_EXIT:
+        POP     Acc                     ;Restore Acc
+        POP     PSW                     ;Restore Flags
+        RETI                            ;Exit
+TO_CHK:
+        JZ      T0_EXIT                 ;Exit if no pins enabled
+        MOV     A,TIMER0                ;Copy TIMER0 to A for eazy access
+        MOV     TMP_MSK,#0              ;Set mask to off
+
+TCHK0:
+        JNB     PWM_E0,TCHK1           ;Skip if pin 0 not enabled
+        CJNE    A,PWM0,TCHK1           ;Skip if not at threshold
+        SETB    TMP_0                  ;Else set bit
+
+TCHK1:
+        JNB     PWM_E1,TCHK2           ;Skip if pin 1 not enabled
+        CJNE    A,PWM1,TCHK2           ;Skip if not at threshold
+        SETB    TMP_1                  ;Else set bit
+
+TCHK2:
+        JNB     PWM_E2,TCHK3           ;Skip if pin 2 not enabled
+        CJNE    A,PWM2,TCHK3           ;Skip if not at threshold
+        SETB    TMP_2                  ;Else set bit
+
+TCHK3:
+        JNB     PWM_E3,TCHK4           ;Skip if pin 3 not enabled
+        CJNE    A,PWM3,TCHK4           ;Skip if not at threshold
+        SETB    TMP_3                  ;Else set bit
+
+TCHK4:
+        JNB     PWM_E4,TCHK5            ;Skip if pin 4 not enabled
+        CJNE    A,PWM4,TCHK5            ;Skip if not at threshold
+        SETB    TMP_4                   ;Else set bit
+
+TCHK5:
+        JNB     PWM_E5,TCHK6            ;Skip if pin 5 not enabled
+        CJNE    A,PWM5,TCHK6            ;Skip if not at threshold
+        SETB    TMP_5                   ;Else set bit
+
+TCHK6:
+        JNB     PWM_E6,TCHK7            ;Skip if pin 6 not enabled
+        CJNE    A,PWM6,TCHK7            ;Skip if not at threshold
+        SETB    TMP_6                   ;Else set bit
+
+TCHK7:
+        JNB     PWM_E7,TCHK8            ;Skip if pin 7 not enabled
+        CJNE    A,PWM7,TCHK8            ;Skip if not at threshold
+        SETB    TMP_7                   ;Else set bit
+TCHK8:
+        MOV     A,TMP_MSK               ;Get pins to toggle
+        XRL     P1,A                    ;Invert Bits from
+        JMP     T0_EXIT                 ;Restore vars & exit

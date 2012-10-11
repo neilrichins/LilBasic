@@ -1,0 +1,18 @@
+WIPEALL_START:
+
+        call tst                        ;Check to see if 'WIPEALL' command
+        DB      'WIPEAL',('L'or 80H)
+        JNC     WIPEALL_END             ;If not, try next command
+
+        MOV     DPTR,#XRAM              ;Set pointer to start of MFS mem
+        CALL    SAVE_XTOP               ;Reset top of mem pointer
+        ;MOV     DPTR,#XRAM              ;Set pointer to start of MFS mem
+
+        MOV     A,#0                    ;Set A to byte to wipe memory with
+WIPEALL_LOOP:
+        MOVX    @DPTR,A                 ;Clear memory
+        INC     DPTR                    ;Bump pointer to next address
+        CJNE    A,DPH,WIPEALL_LOOP      ;Continue until end of memory.
+        CALL    DONE                    ;Get ready for next command
+        JMP     NXT                     ;Execute next command
+WIPEALL_END:

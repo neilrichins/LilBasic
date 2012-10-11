@@ -1,0 +1,39 @@
+                                        ;     %TST    (SE4,=)
+        call   tst                      ;Test if '=' command
+        db      ('=' OR 80H)
+        jnc     se4                     ;If not = command goto Check implied print command
+        HOP_    SE3                     ;Else goto
+
+                                        ;     %TST    (S1,LET)
+                                        ;Parse explicit LET command.
+s0:     call   tst                      ;Test if 'LET' Command
+        db      'LE',('T' OR 80H)
+        jnc     ENDLET                  ;if not 'LET' command goto ENDLET
+
+        TSTV_   CMD_NG                  ;*        %TST    (CMD_NG,=)
+        call   tst
+        db      ('=' OR 80H)
+        jnc     cmd_ng
+
+SE3:    ICALL_  EXPR
+;                                       *        %TST    (SE3A,%1,)
+        call   tst
+        db      (',' OR 80H)            ;to match lil-basic.lst
+        jnc     se3a
+        CALL    SEQ_STORE
+	CALL	IINC
+        HOP_    SE3
+;
+SE3A:   CALL    DONE
+	CALL	STORE
+        JMP     NXT
+;
+SE4:    CALL    DONE                    ;Process implied PRINT command.
+	CALL	FETCH
+        CALL    PRN
+        JMP     NL_NXT
+;
+
+
+
+ENDLET:

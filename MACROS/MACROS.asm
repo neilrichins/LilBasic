@@ -1,0 +1,73 @@
+PFILE   MACRO   NAME
+        DB      029H,0EEH,0F1H,0F2H,'P',NAME,00H
+        ENDM
+DFILE   MACRO   NAME
+        DB      029H,0EEH,0F1H,0F2H,'D',NAME,00H
+        ENDM
+
+PAGE    MACRO   PG
+        MOV     P2,PG
+        ENDM
+
+
+LIT_    MACRO   K
+	CALL	LIT
+	DB	K
+	ENDM
+
+TSTV_   MACRO   LBL
+        CALL    TSTV
+        JNC     LBL
+        ENDM
+
+TSTN_   MACRO   LBL
+        CALL    TSTN
+        JNC     LBL
+        ENDM
+
+TSTL_   MACRO   LBL
+        CALL    TSTN
+        JNC     LBL
+        ENDM
+
+TSTS_   MACRO   LBL
+        CALL    TSTS
+        JC      LBL
+        ENDM
+
+IFDONE_ MACRO   LBL
+        CALL    IFDONE
+        JNC     LBL
+        ENDM
+
+LINIT_  MACRO
+        CALL   L_INIT
+        JC      ERRENT
+        ENDM
+
+COND_   MACRO   LBL
+        CALL   COND
+        JNC    LBL
+        ENDM
+
+NEXT_LOOP_       MACRO   LBL
+        CALL   LOOP
+        JC     LBL
+        ENDM
+
+IJMP_   MACRO   LBL
+        JMP     LBL
+        ENDM
+
+HOP_    MACRO   LBL
+        SJMP    LBL
+        ENDM
+
+ICALL_  MACRO   LBL
+        CALL    LBL
+        ENDM
+
+MLCALL_ MACRO
+        CALL    MLCALL
+        ANL     PSW,#11100111B
+        ENDM

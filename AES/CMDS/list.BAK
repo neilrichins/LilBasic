@@ -1,0 +1,17 @@
+
+;----------------------------------------------------------------------------------------------------------
+;
+;                                       *S14:    %TST    (S15,LIST)              ;Parse LIST command.
+s14:    call   tst
+        db      'LIS',('T' OR 80H)
+        jnc     s15
+        IFDONE_ S14B
+        ICALL_  EXPR
+	CALL	FNDLBL
+	CALL	LST_1
+        IJMP_   CONT
+;
+S14B:   CALL    LST
+        IJMP_   CONT
+;
+;

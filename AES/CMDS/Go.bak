@@ -1,0 +1,10 @@
+GOSUB_ST:
+        call   tst                      ;Test For 'GOSUB' Command
+        db      'GOSU',('B' OR 80H)
+        jnc     GOSUB_END              ;If Not 'GOSUB' Then Exit
+        CALL    SAV                    ;Push return addr onto AES stack
+        ICALL_  EXPR                   ;Push Expression onto AES stack
+        CALL    LNDONE                 ;
+        JMP     XFER                   ; Move pointer to new line #
+GOSUB_END:
+;

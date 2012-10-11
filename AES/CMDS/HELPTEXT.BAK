@@ -1,0 +1,117 @@
+HELPTEXT:      ;Help file to be displayed when 'HELP' command typed. END w/00HEX
+
+        DB      ESC,'[2J'       ;(CLS)
+
+        DB      ' Lil''Basic HELP (c)1998  -NQR',CR
+        DB      '-------------------------------------------------------------------',CR
+        DB      CR
+        DB      'Help On HELP command',CR
+        DB      '--------------',CR
+        DB      'HELP CMDS .......... Help on Basic commands',CR
+        DB      'HELP FUNC .......... Help on Basic functions',CR
+        DB      'HELP OPER .......... Help on Basic operators',CR
+        DB      'HELP VARS .......... Help on Basic variables',CR
+        DB      CR
+        DB      CR
+        DB      00H
+
+HELPTEXTCMD:
+        DB      ESC,'[2J'       ;(CLS)
+        DB      ' Lil''Basic HELP (c)1998  -NQR',CR
+        DB      '-------------------------------------------------------------------',CR
+        DB      CR
+        DB      'Basic Commands',CR
+        DB      '--------------',CR
+        DB      'FILES  ............. List files in memory',CR
+        DB      'LOAD  .............. Load a program',CR
+        DB      'SAVE ............... Save program ',CR
+        DB      'WIPEALL ............ Wipe All saved programs'
+        DB      'CLS  ............... Send Escape code to clear the screen',CR
+        DB      'LET  ............... Assign value to a variable ',CR
+        DB      'GOTO ............... Continue execution on new line of code',CR
+        DB      'GOSUB  ............. Go to a subroutine',CR
+        DB      'RETURN  ............ Return from a subroutine',CR
+        DB      'PRINT or ? ......... Display information via. 232 port',CR
+        DB      'IF () THEN  ........ Conditional branch',CR
+        DB      'INPUT  ............. Get a number from 232 port',CR
+        DB      'CALL  .............. Execute machine code',CR
+;        DB      'FOR / NEXT  ........ Conditional loop',CR
+        DB      'REM  ............... Insert comments into program',CR
+        DB      'END  ............... Stop execution of program',CR
+        DB      'LIST  .............. Display program',CR
+        DB      'RUN  ............... Execute program',CR
+        DB      'NEW  ............... Erase program & variables',CR
+        DB      'BREAK  ............. Restart CPU same as Reset button',CR
+        DB      'PROG   ............. Change program files ... RAM / DEMO / TEST ',CR
+        DB      'HEX  ............... Change to Base 16 for Input & Output',CR
+        DB      'DEC  ............... Change to Base 10 for Input & Output',CR
+        DB      'VER  ............... Display Lil''Basic version',CR
+        DB      CR
+        DB      00H
+HELPTEXTFUNC:
+        DB      ESC,'[2J'       ;(CLS)
+        DB      ' Lil''Basic HELP (c)1998  -NQR',CR
+        DB      '-------------------------------------------------------------------',CR
+        DB      CR
+        DB      'Basic Functions',CR
+        DB      '---------------',CR
+        DB      'RND()  ............. Returns a Random number from 1 to Number',CR
+        DB      'ABS()  ............. Returns Absolute value of Number',CR
+        DB      CR
+        DB      CR
+        DB      00H
+
+HELPTEXTOPER:
+        DB      ESC,'[2J'       ;(CLS)
+        DB      ' Lil''Basic HELP file   (c)1998  -NQR',CR
+        DB      '-------------------------------------------------------------------',CR
+        DB      CR
+        DB      'Basic Operators',CR
+        DB      '---------------',CR
+        DB      '+  ................  Addition',CR
+        DB      '-  ................  Subtraction',CR
+        DB      '*  ................  Multiplication',CR
+        DB      '/  ................  Division',CR
+        DB      'MOD  ..............  Modules ( Remainder from division )',CR
+        DB      '=  ................  Compare if Equal',CR
+        DB      '>  ................  Compare if Greater than',CR
+        DB      '<  ................  Compare if Less than',CR
+        DB      '<>  ...............  Compare if Not Equal',CR
+        DB      '>=  ...............  Compair if Grater than or Equal',CR
+        DB      '<=  ...............  Compair if Less than or Equal',CR
+        DB      'NOT  ..............  Bit-wise logical complement',CR
+        DB      'AND  ..............  Bit-wise logical AND',CR
+        DB      'OR  ...............  Bit-wise logical OR',CR
+        DB      'XOR  ..............  Bit-wise logical Exclusive OR',CR
+        DB      CR
+        DB      CR
+        DB      00H
+
+HELPTEXTVARS:
+        DB      ESC,'[2J'       ;(CLS)
+        DB      ' Lil''Basic HELP file   (c)1998  -NQR',CR
+        DB      '-------------------------------------------------------------------',CR
+        DB      CR
+        DB      'Basic Variables',CR
+        DB      '---------------',CR
+        DB      'A to Z .............  Basic Program variables',CR
+        DB      'PORT1  .............  8 bit user Port on PCB',CR
+        ;DB      'PORT2  .............  4 bit expansion Port on PCB',CR
+        DB      'DBYTE()  ...........  On board CPU Memory location',CR
+        DB      'RBIT()  ............  On board CPU Bit location',CR
+        DB      'XBYTE()  ...........  External Memory location',CR
+        DB      'CBYTE()  ...........  Code Memory location',CR
+        DB      'PWM1() .............  Pulse With Modulation Pin 1 duration = (x)',CR
+        DB      'PWM2() .............  Pulse With Modulation Pin 2 duration = (x)',CR
+        DB      'PWM3() .............  Pulse With Modulation Pin 3 duration = (x)',CR
+        DB      'PWM4() .............  Pulse With Modulation Pin 4 duration = (x)',CR
+        DB      'PWM5() .............  Pulse With Modulation Pin 5 duration = (x)',CR
+        DB      'PWM6() .............  Pulse With Modulation Pin 6 duration = (x)',CR
+        DB      'PWM7() .............  Pulse With Modulation Pin 7 duration = (x)',CR
+        DB      'PWM8() .............  Pulse With Modulation Pin 8 duration = (x)',CR
+        DB      'MASK  ..............  Mask for PWM pins used.  IE. 255 = all pins 0 = none',CR
+        DB      'FREQ  ..............  FREQUENCY of PWM cycles  1= 36hz  75=50hz  100= 60hz ',CR
+        DB      '                                             165=100hz 180=120hz 255=200hz ',CR
+        DB      CR
+        DB      CR
+        DB      00H            ;End of Help File

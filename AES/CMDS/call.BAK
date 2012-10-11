@@ -1,0 +1,10 @@
+
+;                                       *S13:    %TST    (S13A,CALL)             ;Machine language CALL.
+s13:    call   tst
+        db      'CAL',('L' OR 80H)
+        jnc     s13a
+        ICALL_  EXPR
+        CALL    LNDONE
+        MLCALL_
+        JMP     NXT
+;

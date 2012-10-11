@@ -1,0 +1,18 @@
+
+;----------------------------------------------------------------------------------------------------------
+;
+;                                       *S8:     %TST    (S9,IF)         ;Parse IF command.
+s8:     call   tst
+        db      'I',('F' OR 80H)
+        jnc     s9
+        ICALL_  EXPR
+;                                       *        %TST    (S8A,THEN)
+        call   tst
+        db      'THE',('N' OR 80H)
+        jnc     s8a
+S8A:    COND_   S8B
+        IJMP_   TOKEN         ;Continue parsing command.
+;
+S8B:    CALL    SKPTXT
+        IJMP_   STMT
+;

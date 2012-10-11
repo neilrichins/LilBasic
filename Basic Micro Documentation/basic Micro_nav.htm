@@ -1,0 +1,192 @@
+<html>
+<head>
+<script src="basic Micro_utils.js"></script>
+<script>
+<!--
+if (isNav)
+	{
+	window.captureEvents(Event.RESIZE);
+	window.onresize=handleResize;
+	}
+
+function Load()
+	{
+	if( IsFrame("frmNavBar" ) )
+		{
+		LoadDiv('NavBar', UpdateNavBar, InitNavBar);
+		parent.g_NavBarLoaded = true;
+
+		if ( ZoomAvailable() )
+			{
+			if ( null != (div = new CDiv('divZoom', document)) )
+				div.Show();
+
+			document.zoomForm.zoomFactor.onchange();
+			}
+
+		GoToPage(0);
+		}
+		
+	return;
+	}
+
+function LoadDiv(divId, initProc, loadProc)
+	{
+	if ( isIE )
+		{
+		document.ondragstart=CancelDrag;
+		document.onselectstart=CancelDrag;
+		}
+	
+	if ( !isNav )
+		{
+		document.body.style.margin = 2
+		document.body.style.top = 0;
+		}
+	
+	if ( initProc != null )
+		initProc();
+		
+	if ( loadProc != null)
+		loadProc();
+	
+	if ( null != (div = new CDiv(divId, document)) )
+		div.Show();
+	}
+
+function InitNavBar()
+	{
+	if ( isIE )
+		{
+		div = new CImage('btnPrev');
+		div.put_Title(jsLoadString(IDS_TITLE_PREVPAGE));
+			
+		div = new CImage('btnNext');
+		div.put_Title(jsLoadString(IDS_TITLE_NEXTPAGE));
+		}
+	}
+
+function UpdateNavBar()
+	{
+	var entry;
+	
+	ix = 0;
+	entry = g_theApp.FileList[g_theApp.CurrentPageIX];
+
+	if ( null != entry )
+		ix = g_theApp.CurrentPageIX;
+		
+	if ( null != (theForm = GetPageForm()) )
+		theForm.pageSelect.selectedIndex = ix;
+	}
+
+function SelectPage()
+	{
+	theForm = GetPageForm();
+	GoToPage(parseInt(theForm.pageSelect[theForm.pageSelect.selectedIndex].value));
+	}
+
+function GetPageForm()
+	{
+	return FindForm('pageForm', document);
+	}
+
+//-->
+</script>
+
+<style>
+body { position:absolute;top:-5px }
+#NavBar { position:absolute;visibility:hidden;top:3px;left:0px }
+</style>
+</head>
+<body onload="Load()" bgcolor="#000000" link="#000000" vlink="#000000" alink="#000000">
+
+<div id="NavBar" name="NavBar">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+
+<td width="33%" valign="top" nowrap align="left">
+&nbsp
+</td>
+
+<td valign="top" nowrap align="center">
+<form id="pageForm" name="pageForm">
+<script>
+<!--
+if ( document.images )
+	{
+	m_ltOut  = new Image(); m_ltOut.src = "lt_off.gif";
+	m_ltOver = new Image(); m_ltOver.src = "lt_over.gif";
+	m_ltDown = new Image(); m_ltDown.src = "lt_click.gif";
+	m_rtOut  = new Image(); m_rtOut.src = "rt_off.gif";
+	m_rtOver = new Image(); m_rtOver.src = "rt_over.gif";
+	m_rtDown = new Image(); m_rtDown.src = "rt_click.gif";
+	}
+
+function imgOver(id) { if ( document.images ) document.images[id].src = eval("m_" + id + "Over.src"); }
+function imgOut(id)  { if ( document.images ) document.images[id].src = eval("m_" + id + "Out.src"); }
+//-->
+</script>
+<a href="javascript:GoToPrevPage()" onMouseOver="javascript:imgOver('lt');" onMouseOut="javascript:imgOut('lt');">
+<img src="lt_off.gif" name="lt" id="lt" border="0" WIDTH="26" HEIGHT="18">
+</a>
+<select id="pageSelect" name="pageSelect" onchange="javascript:SelectPage();">
+<script>
+<!--
+for ( var i in g_theApp.FileList )
+	{
+	document.write('<option value=\"' + i + '\"');
+		
+	if ( i == 0 )
+		document.write(' selected');
+			
+	document.write('>' + html_escape(g_theApp.FileList[i].PageName));
+	}
+//-->
+</script>
+</select>
+<a href="javascript:GoToNextPage()" onMouseOver="javascript:imgOver('rt');" onMouseOut="javascript:imgOut('rt');">
+<img src="rt_off.gif" id="rt" name="rt" border="0" WIDTH="26" HEIGHT="18">
+</a>
+</form>
+</td>
+
+<td nowrap align="right">
+<span id="divZoom" name="divZoom" style="position:relative;top:0px;visibility:hidden">
+<form id="zoomForm" name="zoomForm">
+<select id="zoomFactor" name="zoomFactor"
+onchange="javascript:zoom_onchange(zoomFactor[zoomFactor.selectedIndex].value)">
+<option value="-1" selected>
+<script>
+<!--
+document.write(jsLoadString(IDS_WINDOW));
+//-->
+</script>
+<option value="1200">1200%
+<option value="800">800%
+<option value="600">600%
+<option value="400">400%
+<option value="200">200%
+<option value="150">150%
+<option value="100">100%
+<option value="75">75%
+<option value="50">50%
+<option value="25">25%
+</select>
+</form>
+</span>
+</td>
+
+</tr></table>
+
+</div>
+
+</body>
+</html>
+
+
+
+
+
+

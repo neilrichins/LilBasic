@@ -1,0 +1,32 @@
+INPUTST:
+        call   tst
+        db      'INPU',('T' OR 80H)     ;Check if Input Command
+        jnc     INPEXIT                 ;If not exit
+INPUT_LOOP:
+        TSTS_   INPUT_SEMI              ;If Followed by String Literal Print it,
+                                        ;and Check if followed by semi or comma.
+        TSTV_   INPUT_ERR               ;If not followed by variable exit with error
+        CALL    INNUM                   ;Get value from 232port
+        CALL    STORE                   ;Put value into var
+                                        ;Need to check here to verify we are done.
+INPUT_SEMI:
+        call   tst                      ;If next char is a ';'
+        db      (';' OR 80H)
+        jc     INPUT_LOOP               ;Continue with input command
+                                        ;Else Check if it is a comma
+
+INPUT_COMMA:
+        call   tst                      ;If next char is not a','
+        db      (',' OR 80H)
+        jnc     INPUT_END               ;Then must be end of command, so exit
+        CALL    SPC                     ;Else Space out tabfield
+        HOP_    INPUT_LOOP              ;continue input command
+;
+INPUT_ERR:
+       IJMP_   SYN_NG                  ;Jump to Syntax Error
+;
+INPUT_END:
+        CALL    DONE
+        JMP     NL_NXT
+;
+INPEXIT:

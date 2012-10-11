@@ -1,0 +1,68 @@
+;===================================================================
+;I                 RESET INTERRUPT VECTOR                          I
+;===================================================================
+S_INIT:
+
+        MOV     TH0,#0FH        ;Load Timer0 overload value for timer 0 (1/120 th sec)
+        SETB    EA              ;Enable interupts
+        SETB    ET0             ;Enable Timer0 Interupt for TIMER
+        SETB    TR0             ;Enable Timer0 interrupt
+
+        SETB    XAUTO           ;Default run program from shared Xmem
+
+        MOV     DPTR,#XRAM       ;Set DPTR to start of XRAM heap
+        CALL    IS_TAG
+        JC      TRAM_OK         ;If Tag at start of Xram, don't reset HEAP
+        MOV     DPTR,#XRAM      ;No Program, so default NVram
+        CALL    SAVE_XTOP       ;Reset Xtop to start of XRAM heap
+        CLR     XAUTO           ;If no program in Xmem run from ROM
+
+
+
+ TRAM_OK:
+
+        CLR     A
+	MOV	PSW,A
+        MOV     PRT_MSK,A       ;Clear Port bit mask
+        CLR     RUNMOD          ;Execution set to command line
+        CLR     HEXMOD          ;Default I/O to Decimal
+        MOV     SP,#SP_BASE     ;Initialize hardware stack.
+        MOV     AESP,#0H        ;Initialize Arithmatic Expression Stack.
+
+
+SP_INI:
+        MOV     R0,#144
+        MOV     FLAGS,#0         ;Interroutine flags.
+
+        CLR     TR1             ;
+	MOV	SCON,#01011010B	;TI set indicates transmitter ready.
+        MOV     TMOD,#00100010B ;Timer 0 & 1 Set to auto-reload timer mode.
+
+        MOV     TH1,#0FDH       ;9600 bps.
+        SETB    TR1
+
+        MOV     A,TIMER1        ; If timer =0 then must be a powerup , Else Just a reset
+        JZ      AUTORUN
+
+
+;======================================================================================
+;
+START_COMMAND_SEG:
+
+        CALL    VER_MSG
+        CLR     AUTO            ;Don't Auto Rum program
+        CLR     XAUTO           ;Don't Run program from shared Xmem
+        JMP     START
+
+;======================================================================================
+;
+AUTORUN:
+                                        ;Clear Program in RAM space
+        MOV     DPL,#LOW(EXTRAM)        ;Move DPTR to beginning of program
+        MOV     DPH,#HIGH(EXTRAM)
+        MOV     A,#0FFH                 ;Token for end of basic program
+        MOVX    @DPTR,A                 ;Put END token at start of program
+
+        SETB    AUTO            ;Auto Rum program
+        SETB    XAUTO           ;Default run program from shared Xmem
+        JMP     XEC
